@@ -56,7 +56,11 @@ builder.Services.AddTransient<IRatingType, RatingTypeEntity>();
 builder.Services.AddScoped<IIdentityOperation, IdentityOperation>();
 builder.Services.AddScoped<IAuthorizationOperation, AuthorizationOperation>();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+app.UseCors(builder => builder.AllowAnyOrigin());
 
 // Configure the HTTP request pipeline.
 
