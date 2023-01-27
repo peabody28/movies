@@ -1,0 +1,12 @@
+﻿using movies.Interfaces.Entities;
+
+namespace movies.Interfaces.Repositories
+{
+    public interface IFilmRepository
+    {
+        IFilm Object(string title);
+
+        IEnumerable<IFilm> Collection();
+        IFilm Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int year);
+    }
+}
