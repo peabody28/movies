@@ -1,19 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Operations;
+using movies.Interfaces.Repositories;
 using movies.Models.Login;
 
 namespace movies.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class LoginController : BaseController
     {
+        #region [ Dependency -> Operations ]
+
         public IIdentityOperation IdentityOperation { get; set; }
 
         public IAuthorizationOperation AuthorizationOperation { get; set; }
 
-        public LoginController(IIdentityOperation identityOperation, IAuthorizationOperation authorizationOperation)
+        #endregion
+
+        public LoginController(IUserRepository userRepository, IIdentityOperation identityOperation, IAuthorizationOperation authorizationOperation) : base(userRepository)
         {
             IdentityOperation = identityOperation;
             AuthorizationOperation = authorizationOperation;
@@ -25,7 +28,7 @@ namespace movies.Controllers
         {
             var identity = IdentityOperation.Object(model.NickName, model.Password);
             if (identity == null)
-                return null;
+                throw new BadHttpRequestException("Cannot find a user with specified credentials"); // TODO: add validation
 
             var token = AuthorizationOperation.GenerateToken(identity);
 

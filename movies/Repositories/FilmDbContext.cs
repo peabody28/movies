@@ -18,7 +18,8 @@ namespace movies.Repositories
         public DbSet<RatingTypeEntity> RatingType { get; set; }
         public DbSet<RatingEntity> Rating { get; set; }
         public DbSet<FilmEntity> Film { get; set; }
-
+        public DbSet<SectionEntity> Section { get; set; }
+        public DbSet<UserFilmEntity> UserFilm { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +43,15 @@ namespace movies.Repositories
 
             modelBuilder.Entity<FilmEntity>()
                .HasOne(c => c.Country as CountryEntity);
+
+            modelBuilder.Entity<UserFilmEntity>()
+                .HasOne(c => c.Film as FilmEntity);
+
+            modelBuilder.Entity<UserFilmEntity>()
+                .HasOne(c => c.User as UserEntity);
+
+            modelBuilder.Entity<UserFilmEntity>()
+                .HasOne(c => c.Section as SectionEntity);
         }
     }
 }

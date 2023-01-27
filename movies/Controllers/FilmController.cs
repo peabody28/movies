@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Repositories;
 using movies.Models.Film;
+using System.Net;
 
 namespace movies.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class FilmController : ControllerBase
+    public class FilmController : BaseController
     {
+        #region [ Dependnecy -> Repositories ]
+
         public IFilmRepository FilmRepository { get; set; }
 
         public IDirectorRepository DirectorRepository { get; set; }
@@ -17,13 +18,18 @@ namespace movies.Controllers
 
         public ICountryRepository CountryRepository { get; set; }
 
-        public FilmController(IFilmRepository filmRepository, IDirectorRepository directorRepository,
-            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository)
+        public IUserFilmRepository UserFilmRepository { get; set; }
+
+        #endregion
+
+        public FilmController(IUserRepository userRepository, IFilmRepository filmRepository, IDirectorRepository directorRepository,
+            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository) : base(userRepository)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
             RatingTypeRepository = ratingTypeRepository;
             CountryRepository = countryRepository;
+            UserFilmRepository = userFilmRepository;
         }
 
         [Authorize]
@@ -50,18 +56,49 @@ namespace movies.Controllers
 
         [Authorize]
         [HttpGet]
-        public IEnumerable<FilmModel> Get([FromQuery] FilmRequestModel model)
+        public IEnumerable<FilmModel> Get()
         {
             var films = FilmRepository.Collection();
 
             return films.Select(film => new FilmModel
             {
+                Id = film.Id,
                 Title = film.Title,
                 Description = film.Description,
                 DirectorName = string.Join(" ", film.Director.FirstName, film.Director.LastName),
                 CountryName = film.Country.Name,
                 Year = film.Year,
             });
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("/User/Film")]
+        public IEnumerable<FilmModel> GetUserFilms()
+        {
+            var userFilms = UserFilmRepository.Collection(CurrentUser);
+
+            return userFilms.Select(userFilm => new FilmModel
+            {
+                Id = userFilm.Film.Id,
+                Title = userFilm.Film.Title,
+                Description = userFilm.Film.Description,
+                DirectorName = string.Join(" ", userFilm.Film.Director.FirstName, userFilm.Film.Director.LastName),
+                CountryName = userFilm.Film.Country.Name,
+                Year = userFilm.Film.Year,
+            });
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("/User/Film")]
+        public HttpResponseMessage Add(UserFilmAddModel model)
+        {
+            var film = FilmRepository.Object(model.FilmId);
+
+            UserFilmRepository.Create(CurrentUser, film);
+
+            return new HttpResponseMessage(HttpStatusCode.Created);
         }
     }
 }

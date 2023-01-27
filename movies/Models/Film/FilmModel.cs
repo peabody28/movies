@@ -4,6 +4,9 @@ namespace movies.Models.Film
 {
     public class FilmModel
     {
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+
         [JsonProperty("title")]
         public string Title { get; set; }
 

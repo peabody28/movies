@@ -45,5 +45,10 @@ namespace movies.Repositories
         {
             return FilmDbContext.User.FirstOrDefault(c => c.NickName.Equals(nickName) && c.PasswordHash.Equals(passwordHash));
         }
+
+        public IUser Object(string nickName)
+        {
+            return FilmDbContext.User.FirstOrDefault(c => c.NickName.Equals(nickName));
+        }
     }
 }

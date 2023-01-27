@@ -17,6 +17,11 @@ namespace movies.Repositories
             ServiceProvider = serviceProvider;
         }
 
+        public IFilm Object(Guid id)
+        {
+            return FilmDbContext.Film.FirstOrDefault(film => film.Id.Equals(id));
+        }
+
         public IFilm Object(string title)
         {
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).FirstOrDefault(f => f.Title.Equals(title));

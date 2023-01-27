@@ -4,6 +4,8 @@ namespace movies.Interfaces.Repositories
 {
     public interface IFilmRepository
     {
+        IFilm Object(Guid id);
+
         IFilm Object(string title);
 
         IEnumerable<IFilm> Collection();
