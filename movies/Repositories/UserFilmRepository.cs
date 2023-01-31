@@ -43,7 +43,7 @@ namespace movies.Repositories
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
-                .Where(uf => uf.User.Equals(user) && (section != null ? uf.Section.Equals(section) : true));
+                .Where(uf => uf.User.Equals(user) && (section != null ? uf.Section.Equals(section) : true)).ToList();
         }
     }
 }

@@ -75,11 +75,16 @@ namespace movies.Controllers
         [Authorize]
         [HttpGet]
         [Route("/User/Film")]
-        public IEnumerable<FilmModel> GetUserFilms()
+        public UserFilmsModel UserFilms([FromQuery] UserFilmsRequestModel model)
         {
-            var userFilms = UserFilmRepository.Collection(CurrentUser);
+            var section = SectionRepository.Object(model.SectionName);
+            var userFilms = UserFilmRepository.Collection(CurrentUser, section);
 
-            return userFilms.Select(userFilm => FilmModelBuilder.Build(film));
+            return new UserFilmsModel
+            {
+                SectionName = section?.Name,
+                Films = userFilms.Select(userFilm => FilmModelBuilder.Build(userFilm.Film)) 
+            };
         }
 
         [Authorize]
