@@ -37,6 +37,9 @@ namespace movies.Controllers
         public FilmModel Create(FilmCreateModel model)
         {
             var director = DirectorRepository.Object(model.DirectorFirstName, model.DirectorLastName);
+            if(director == null) 
+                director = DirectorRepository.Create(model.DirectorFirstName, model.DirectorLastName);
+
             var ratingType = RatingTypeRepository.Object(model.RatingTypeName);
             var country = CountryRepository.Object(model.CountryCode);
 

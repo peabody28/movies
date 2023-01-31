@@ -6,8 +6,8 @@
 
         string FirstName { get; set; }
 
-        string LastName { get; set; }
+        string? LastName { get; set; }
 
-        int Age { get; set; }
+        int? Age { get; set; }
     }
 }
