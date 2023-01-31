@@ -27,6 +27,11 @@ namespace movies.Repositories
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).FirstOrDefault(f => f.Title.Equals(title));
         }
 
+        public void Update(IFilm film)
+        {
+            FilmDbContext.Film.Update(film as FilmEntity);
+        }
+
         public IEnumerable<IFilm> Collection()
         {
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director);

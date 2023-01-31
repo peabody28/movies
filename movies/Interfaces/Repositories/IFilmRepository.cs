@@ -8,6 +8,8 @@ namespace movies.Interfaces.Repositories
 
         IFilm Object(string title);
 
+        void Update(IFilm film);
+
         IEnumerable<IFilm> Collection();
         IFilm Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int year);
     }

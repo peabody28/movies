@@ -77,6 +77,16 @@ namespace movies.Controllers
             });
         }
 
+        [HttpPut]
+        public HttpResponseMessage Update(string title, string description)
+        {
+            var film = FilmRepository.Object(title);
+            film.Description = description;
+            FilmRepository.Update(film);
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
         [Authorize]
         [HttpGet]
         [Route("/User/Film")]
