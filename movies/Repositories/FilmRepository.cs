@@ -29,7 +29,7 @@ namespace movies.Repositories
 
         public IEnumerable<IFilm> Collection()
         {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director);
+            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).ToList();
         }
 
         public IFilm Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int year)

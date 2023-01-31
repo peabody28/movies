@@ -4,6 +4,7 @@ using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
+using movies.ModelBuilders;
 using movies.Operations;
 using movies.Repositories;
 using System.Text;
@@ -57,6 +58,8 @@ builder.Services.AddTransient<IUserFilm, UserFilmEntity>();
 
 builder.Services.AddScoped<IIdentityOperation, IdentityOperation>();
 builder.Services.AddScoped<IAuthorizationOperation, AuthorizationOperation>();
+
+builder.Services.AddScoped<FilmModelBuilder, FilmModelBuilder>();
 
 builder.Services.AddCors();
 

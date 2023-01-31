@@ -17,5 +17,10 @@ namespace movies.Repositories
         {
             return FilmDbContext.Rating.Include(r => r.Film).Include(r => r.RatingType).FirstOrDefault(r => r.Film.Equals(film) && r.RatingType.Equals(ratingType));
         }
+
+        public IEnumerable<IRating> Collection(IFilm film)
+        {
+            return FilmDbContext.Rating.Include(r => r.Film).Include(r => r.RatingType).Where(r => r.Film.Equals(film)).ToList();
+        }
     }
 }

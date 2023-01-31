@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Repositories;
+using movies.ModelBuilders;
 using movies.Models.Film;
 using System.Net;
 
@@ -24,9 +25,16 @@ namespace movies.Controllers
 
         #endregion
 
+
+        #region [ Dependency -> Model Builders ]
+
+        public FilmModelBuilder FilmModelBuilder { get; set; }
+
+        #endregion
+
         public FilmController(IUserRepository userRepository, IFilmRepository filmRepository, IDirectorRepository directorRepository,
             IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository,
-            ISectionRepository sectionRepository) : base(userRepository)
+            ISectionRepository sectionRepository, FilmModelBuilder filmModelBuilder) : base(userRepository)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
@@ -34,6 +42,7 @@ namespace movies.Controllers
             CountryRepository = countryRepository;
             UserFilmRepository = userFilmRepository;
             SectionRepository = sectionRepository;
+            FilmModelBuilder = filmModelBuilder;
         }
 
         [Authorize]
@@ -52,16 +61,7 @@ namespace movies.Controllers
 
             var film = FilmRepository.Create(director, ratingType, model.RatingValue, country, model.Title, model.Description, model.Year);
 
-            var directorName = string.Join(" ", film.Director.FirstName, film.Director.LastName);
-
-            return new FilmModel
-            {
-                Title = film.Title,
-                Description = film.Description,
-                DirectorName = directorName,
-                CountryName = film.Country.Name,
-                Year = film.Year,
-            };
+            return FilmModelBuilder.Build(film);
         }
 
         [Authorize]
@@ -70,15 +70,7 @@ namespace movies.Controllers
         {
             var films = FilmRepository.Collection();
 
-            return films.Select(film => new FilmModel
-            {
-                Id = film.Id,
-                Title = film.Title,
-                Description = film.Description,
-                DirectorName = string.Join(" ", film.Director.FirstName, film.Director.LastName),
-                CountryName = film.Country.Name,
-                Year = film.Year,
-            });
+            return films.Select(film => FilmModelBuilder.Build(film));
         }
 
         [Authorize]

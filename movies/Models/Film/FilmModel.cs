@@ -21,5 +21,8 @@ namespace movies.Models.Film
 
         [JsonProperty("year")]
         public int Year { get; set; }
+
+        [JsonProperty("ratings")]
+        public IEnumerable<RatingModel> Ratings { get; set; }
     }
 }

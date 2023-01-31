@@ -14,14 +14,12 @@ namespace movies.Repositories
 
         public IEnumerable<ISection> Collection()
         {
-            return FilmDbContext.Section;
+            return FilmDbContext.Section.ToList();
         }
 
         public ISection Object(string name)
         {
             return FilmDbContext.Section.FirstOrDefault(section => section.Name.Equals(name));
         }
-
-
     }
 }
