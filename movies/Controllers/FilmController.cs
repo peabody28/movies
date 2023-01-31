@@ -25,7 +25,6 @@ namespace movies.Controllers
 
         #endregion
 
-
         #region [ Dependency -> Model Builders ]
 
         public FilmModelBuilder FilmModelBuilder { get; set; }
@@ -80,15 +79,7 @@ namespace movies.Controllers
         {
             var userFilms = UserFilmRepository.Collection(CurrentUser);
 
-            return userFilms.Select(userFilm => new FilmModel
-            {
-                Id = userFilm.Film.Id,
-                Title = userFilm.Film.Title,
-                Description = userFilm.Film.Description,
-                DirectorName = string.Join(" ", userFilm.Film.Director.FirstName, userFilm.Film.Director.LastName),
-                CountryName = userFilm.Film.Country.Name,
-                Year = userFilm.Film.Year,
-            });
+            return userFilms.Select(userFilm => FilmModelBuilder.Build(film));
         }
 
         [Authorize]
