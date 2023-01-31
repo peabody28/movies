@@ -44,6 +44,7 @@ builder.Services.AddScoped<IRatingTypeRepository, RatingTypeRepository>();
 builder.Services.AddScoped<IFilmRepository, FilmRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IUserFilmRepository, UserFilmRepository>();
+builder.Services.AddScoped<ISectionRepository, SectionRepository>();
 
 builder.Services.AddTransient<IUser, UserEntity>();
 builder.Services.AddTransient<ICountry, CountryEntity>();

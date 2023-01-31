@@ -20,16 +20,20 @@ namespace movies.Controllers
 
         public IUserFilmRepository UserFilmRepository { get; set; }
 
+        public ISectionRepository SectionRepository { get; set; }
+
         #endregion
 
         public FilmController(IUserRepository userRepository, IFilmRepository filmRepository, IDirectorRepository directorRepository,
-            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository) : base(userRepository)
+            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository,
+            ISectionRepository sectionRepository) : base(userRepository)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
             RatingTypeRepository = ratingTypeRepository;
             CountryRepository = countryRepository;
             UserFilmRepository = userFilmRepository;
+            SectionRepository = sectionRepository;
         }
 
         [Authorize]
@@ -101,8 +105,9 @@ namespace movies.Controllers
         public HttpResponseMessage Add(UserFilmAddModel model)
         {
             var film = FilmRepository.Object(model.FilmId);
+            var section = SectionRepository.Object(model.SectionName);
 
-            UserFilmRepository.Create(CurrentUser, film);
+            UserFilmRepository.Create(CurrentUser, film, section);
 
             return new HttpResponseMessage(HttpStatusCode.Created);
         }

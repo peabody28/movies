@@ -6,5 +6,8 @@ namespace movies.Models.Film
     {
         [JsonProperty("filmId")]
         public Guid FilmId { get; set; }
+
+        [JsonProperty("sectionName")]
+        public string? SectionName { get; set; }
     }
 }
