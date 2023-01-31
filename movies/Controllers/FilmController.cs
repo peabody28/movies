@@ -78,10 +78,10 @@ namespace movies.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage Update(string title, string description)
+        public HttpResponseMessage Update(FilmUpdateModel model)
         {
-            var film = FilmRepository.Object(title);
-            film.Description = description;
+            var film = FilmRepository.Object(model.Title);
+            film.Description = model.Description;
             FilmRepository.Update(film);
 
             return new HttpResponseMessage(HttpStatusCode.OK);

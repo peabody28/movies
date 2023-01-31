@@ -30,6 +30,7 @@ namespace movies.Repositories
         public void Update(IFilm film)
         {
             FilmDbContext.Film.Update(film as FilmEntity);
+            FilmDbContext.SaveChanges();
         }
 
         public IEnumerable<IFilm> Collection()
