@@ -35,7 +35,7 @@ namespace movies.Repositories
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).ToList();
         }
 
-        public IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int? year = null)
+        public IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string? description, int? year = null)
         {
             var transactionContext = FilmDbContext.Database.BeginTransaction();
 

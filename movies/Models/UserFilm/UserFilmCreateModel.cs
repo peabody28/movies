@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace movies.Models.Film
+namespace movies.Models.UserFilm
 {
-    public class UserFilmAddModel
+    public class UserFilmCreateModel
     {
         [JsonProperty("filmId")]
         public Guid FilmId { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace movies.Models.Film
+namespace movies.Models.UserFilm
 {
     public class UserFilmsRequestModel
     {

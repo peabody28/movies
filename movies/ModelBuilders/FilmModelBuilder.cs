@@ -22,7 +22,7 @@ namespace movies.ModelBuilders
                 Id = film.Id,
                 Title = film.Title,
                 Description = film.Description,
-                DirectorName = string.Join(" ", film.Director.FirstName, film.Director.LastName),
+                DirectorName = film.Director.Name,
                 CountryName = film.Country.Name,
                 Year = film?.Year,
                 Ratings = ratings.Select(r => new RatingModel

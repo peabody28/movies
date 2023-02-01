@@ -4,7 +4,6 @@ using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
 using movies.Models.Film;
-using System.Net;
 
 namespace movies.Controllers
 {
@@ -20,10 +19,6 @@ namespace movies.Controllers
 
         public ICountryRepository CountryRepository { get; set; }
 
-        public IUserFilmRepository UserFilmRepository { get; set; }
-
-        public ISectionRepository SectionRepository { get; set; }
-
         #endregion
 
         #region [ Dependency -> Model Builders ]
@@ -33,15 +28,12 @@ namespace movies.Controllers
         #endregion
 
         public FilmController(IUserOperation userOperation, IFilmRepository filmRepository, IDirectorRepository directorRepository,
-            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository,
-            ISectionRepository sectionRepository, FilmModelBuilder filmModelBuilder) : base(userOperation)
+            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, FilmModelBuilder filmModelBuilder) : base(userOperation)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
             RatingTypeRepository = ratingTypeRepository;
             CountryRepository = countryRepository;
-            UserFilmRepository = userFilmRepository;
-            SectionRepository = sectionRepository;
             FilmModelBuilder = filmModelBuilder;
         }
 
@@ -49,9 +41,9 @@ namespace movies.Controllers
         [HttpPost]
         public FilmModel Create(FilmCreateModel model)
         {
-            var director = DirectorRepository.Object(model.DirectorFirstName, model.DirectorLastName);
+            var director = DirectorRepository.Object(model.DirectorName);
             if(director == null) 
-                director = DirectorRepository.Create(model.DirectorFirstName, model.DirectorLastName);
+                director = DirectorRepository.Create(model.DirectorName);
 
             var ratingType = RatingTypeRepository.Object(model.RatingTypeName);
 
@@ -71,34 +63,6 @@ namespace movies.Controllers
             var films = FilmRepository.Collection();
 
             return films.Select(film => FilmModelBuilder.Build(film));
-        }
-
-        [Authorize]
-        [HttpGet]
-        [Route("/User/Film")]
-        public UserFilmsModel UserFilms([FromQuery] UserFilmsRequestModel model)
-        {
-            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
-            var userFilms = UserFilmRepository.Collection(CurrentUser, section);
-
-            return new UserFilmsModel
-            {
-                SectionName = section?.Name,
-                Films = userFilms.Select(userFilm => FilmModelBuilder.Build(userFilm.Film)) 
-            };
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("/User/Film")]
-        public HttpResponseMessage UserFilmCreate(UserFilmAddModel model)
-        {
-            var film = FilmRepository.Object(model.FilmId);
-            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
-
-            UserFilmRepository.Create(CurrentUser, film!, section);
-
-            return new HttpResponseMessage(HttpStatusCode.Created);
         }
     }
 }

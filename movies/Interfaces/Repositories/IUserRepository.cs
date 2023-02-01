@@ -7,6 +7,6 @@ namespace movies.Interfaces.Repositories
         IUser? Object(string nickName);
         IUser? Object(string nickName, string passwordHash);
 
-        IUser? Create(string nickName, string email, string passwordHash, string? firstName = null, string? lastName = null);
+        IUser? Create(string nickName, string email, string passwordHash);
     }
 }

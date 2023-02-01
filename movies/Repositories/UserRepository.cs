@@ -16,14 +16,12 @@ namespace movies.Repositories
             ServiceProvider = serviceProvider;
         }
 
-        public IUser Create(string nickName, string email, string passwordHash, string? firstName = null, string? lastName = null)
+        public IUser Create(string nickName, string email, string passwordHash)
         {
             try
             {
                 var userEntity = ServiceProvider.GetRequiredService<IUser>();
                 userEntity.Id = Guid.NewGuid();
-                userEntity.FirstName = firstName;
-                userEntity.LastName = lastName;
                 userEntity.NickName = nickName;
                 userEntity.Email = email;
                 userEntity.PasswordHash = passwordHash;

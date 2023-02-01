@@ -45,6 +45,15 @@ namespace movies.Validations.Film
             return ValidationResult.Empty();
         }
 
+        public ValidationResult ValidateUserFilmId(Guid id)
+        {
+            var userFilm = UserFilmRepository.Object(id);
+            if(userFilm == null)
+                return new ValidationResult("USER_FILM_INVALID", "Cannot find a user film");
+
+            return ValidationResult.Empty();
+        }
+
         public ValidationResult CheckDuplicates(string filmTitle)
         {
             var film = FilmRepository.Object(filmTitle);

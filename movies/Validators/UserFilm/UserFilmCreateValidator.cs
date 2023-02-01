@@ -1,14 +1,14 @@
 ﻿using FluentValidation;
 using movies.Interfaces.Operations;
-using movies.Models.Film;
+using movies.Models.UserFilm;
 using movies.Validations.Film;
 using movies.Validations.Section;
 
-namespace movies.Validators.Film
+namespace movies.Validators.UserFilm
 {
-    public class UserFilmAddValidator : AbstractValidator<UserFilmAddModel>
+    public class UserFilmCreateValidator : AbstractValidator<UserFilmCreateModel>
     {
-        public UserFilmAddValidator(FilmValidation filmValidation, SectionValidation sectionValidation, IUserOperation userOperation) 
+        public UserFilmCreateValidator(FilmValidation filmValidation, SectionValidation sectionValidation, IUserOperation userOperation)
         {
             RuleFor(model => model)
                 .Custom((model, context) => context.AddFailures(nameof(model.FilmId), filmValidation.ValidateFilmId(model.FilmId)))

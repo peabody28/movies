@@ -10,6 +10,7 @@ using movies.Operations;
 using movies.Repositories;
 using movies.Validations.Film;
 using movies.Validations.Section;
+using movies.Validations.User;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,8 +66,10 @@ builder.Services.AddScoped<IUserOperation, UserOperation>();
 
 builder.Services.AddScoped<FilmValidation, FilmValidation>();
 builder.Services.AddScoped<SectionValidation, SectionValidation>();
+builder.Services.AddScoped<UserValidation, UserValidation>();
 
 builder.Services.AddScoped<FilmModelBuilder, FilmModelBuilder>();
+builder.Services.AddScoped<UserFilmModelBuilder, UserFilmModelBuilder>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

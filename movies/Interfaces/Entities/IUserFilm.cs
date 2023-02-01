@@ -15,5 +15,7 @@
         Guid? SectionFk { get; set; }
 
         ISection? Section { get; set; }
+
+        bool IsDeleted { get; set; }
     }
 }

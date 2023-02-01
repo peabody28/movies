@@ -22,7 +22,7 @@ namespace movies.Controllers
         {
             var passwordHash = MD5Helper.Hash(model.Password);
 
-            UserRepository.Create(model.NickName, model.Email, passwordHash, model.FirstName, model.LastName);
+            UserRepository.Create(model.NickName, model.Email, passwordHash);
 
             return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
         }
