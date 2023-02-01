@@ -32,9 +32,7 @@ namespace movies.Repositories
 
         public IDirector? Object(string name)
         {
-            var nameFilter = (IDirector d) => d.Name.Equals(name);
-
-            return FilmDbContext.Director.FirstOrDefault(d => nameFilter(d));
+            return FilmDbContext.Director.FirstOrDefault(d => d.Name.Equals(name));
         }
     }
 }
