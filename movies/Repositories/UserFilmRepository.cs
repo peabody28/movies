@@ -45,5 +45,15 @@ namespace movies.Repositories
                 .Include(uf => uf.Film.Country)
                 .Where(uf => uf.User.Equals(user) && (section != null ? uf.Section.Equals(section) : true)).ToList();
         }
+
+        public IUserFilm Object(IUser user, IFilm film, ISection? section = null)
+        {
+            return FilmDbContext.UserFilm
+                .Include(uf => uf.Film)
+                .Include(uf => uf.User)
+                .Include(uf => uf.Film.Director)
+                .Include(uf => uf.Film.Country)
+                .FirstOrDefault(uf => uf.User.Equals(user) && uf.Film.Equals(film) && (section != null ? uf.Section.Equals(section) : true));
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Entities;
-using movies.Interfaces.Repositories;
+using movies.Interfaces.Operations;
 
 namespace movies.Controllers
 {
@@ -8,21 +8,17 @@ namespace movies.Controllers
     [Route("[controller]")]
     public class BaseController : ControllerBase
     {
-        public IUserRepository UserRepository { get; set; }
+        public IUserOperation UserOperation { get; set; }
 
-        public BaseController(IUserRepository userRepository) 
-        {
-            UserRepository = userRepository;
+        public BaseController(IUserOperation userOperation)
+        { 
+            UserOperation = userOperation;
         }
 
-        public IUser CurrentUser { 
+        public IUser? CurrentUser { 
             get
             {
-                var nickName = Request.HttpContext?.User?.Identity?.Name;
-                if (string.IsNullOrWhiteSpace(nickName))
-                    return null;
-
-                return UserRepository.Object(nickName);
+                return UserOperation.CurrentUser;
             } 
         }
     }

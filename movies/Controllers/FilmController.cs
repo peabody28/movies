@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
 using movies.Models.Film;
@@ -31,9 +32,9 @@ namespace movies.Controllers
 
         #endregion
 
-        public FilmController(IUserRepository userRepository, IFilmRepository filmRepository, IDirectorRepository directorRepository,
+        public FilmController(IUserOperation userOperation, IFilmRepository filmRepository, IDirectorRepository directorRepository,
             IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository,
-            ISectionRepository sectionRepository, FilmModelBuilder filmModelBuilder) : base(userRepository)
+            ISectionRepository sectionRepository, FilmModelBuilder filmModelBuilder) : base(userOperation)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
@@ -90,7 +91,7 @@ namespace movies.Controllers
         [Authorize]
         [HttpPost]
         [Route("/User/Film")]
-        public HttpResponseMessage Add(UserFilmAddModel model)
+        public HttpResponseMessage UserFilmCreate(UserFilmAddModel model)
         {
             var film = FilmRepository.Object(model.FilmId);
             var section = SectionRepository.Object(model.SectionName);

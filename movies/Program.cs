@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using movies.Entities;
@@ -7,6 +8,8 @@ using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
 using movies.Operations;
 using movies.Repositories;
+using movies.Validations.Film;
+using movies.Validations.Section;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,10 +61,22 @@ builder.Services.AddTransient<IUserFilm, UserFilmEntity>();
 
 builder.Services.AddScoped<IIdentityOperation, IdentityOperation>();
 builder.Services.AddScoped<IAuthorizationOperation, AuthorizationOperation>();
+builder.Services.AddScoped<IUserOperation, UserOperation>();
+
+builder.Services.AddScoped<FilmValidation, FilmValidation>();
+builder.Services.AddScoped<SectionValidation, SectionValidation>();
 
 builder.Services.AddScoped<FilmModelBuilder, FilmModelBuilder>();
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddCors();
+
+builder.Services.AddFluentValidation(s =>
+{
+    s.RegisterValidatorsFromAssemblyContaining<Program>();
+    s.ValidatorOptions.CascadeMode = FluentValidation.CascadeMode.StopOnFirstFailure;
+});
 
 var app = builder.Build();
 
