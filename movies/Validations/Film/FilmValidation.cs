@@ -59,7 +59,7 @@ namespace movies.Validations.Film
             var film = FilmRepository.Object(filmId);
             var section = !string.IsNullOrWhiteSpace(sectionName) ? SectionRepository.Object(sectionName) : null;
 
-            var userFilm = UserFilmRepository.Object(user, film, section);
+            var userFilm = UserFilmRepository.Object(user, film!, section);
             if(userFilm != null)
                 return new ValidationResult("FILM_ALREADY_EXISTS", "Film is already exists");
 

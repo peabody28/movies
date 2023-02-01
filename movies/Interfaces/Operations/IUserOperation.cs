@@ -4,6 +4,6 @@ namespace movies.Interfaces.Operations
 {
     public interface IUserOperation
     {
-        public IUser CurrentUser { get; }
+        public IUser? CurrentUser { get; }
     }
 }

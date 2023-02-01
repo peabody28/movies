@@ -15,10 +15,10 @@ namespace movies.Controllers
             UserOperation = userOperation;
         }
 
-        public IUser? CurrentUser { 
+        public IUser CurrentUser { 
             get
             {
-                return UserOperation.CurrentUser;
+                return UserOperation.CurrentUser!;
             } 
         }
     }

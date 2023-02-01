@@ -6,8 +6,8 @@ namespace movies.Entities
     public class FilmEntity : IFilm
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
 
        
         public IDirector Director { get; set; }
@@ -19,6 +19,8 @@ namespace movies.Entities
         [ForeignKey("Country")]
         public Guid CountryFk { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

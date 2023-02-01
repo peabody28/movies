@@ -20,7 +20,7 @@ namespace movies.Models.Film
         public string CountryName { get; set; }
 
         [JsonProperty("year")]
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         [JsonProperty("ratings")]
         public IEnumerable<RatingModel> Ratings { get; set; }

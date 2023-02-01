@@ -6,6 +6,6 @@
 
         public string Message { get; set; }
 
-        public object CustomState { get; set; }
+        public object? CustomState { get; set; }
     }
 }

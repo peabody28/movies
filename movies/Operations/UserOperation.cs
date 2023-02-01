@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Http;
-using movies.Interfaces.Entities;
+﻿using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.Repositories;
@@ -19,7 +17,7 @@ namespace movies.Operations
             UserRepository = userRepository;
         }
 
-        public IUser CurrentUser
+        public IUser? CurrentUser
         {
             get
             {

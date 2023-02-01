@@ -7,6 +7,7 @@ namespace movies.Repositories
     public class CountryRepository : ICountryRepository
     {
         private FilmDbContext FilmDbContext { get; set; }
+
         private IServiceProvider ServiceProvider { get; set; }
 
         public CountryRepository(FilmDbContext filmDbContext, IServiceProvider serviceProvider)
@@ -29,7 +30,7 @@ namespace movies.Repositories
             return country.Entity;
         }
 
-        public ICountry Object(string code)
+        public ICountry? Object(string code)
         {
             return FilmDbContext.Country.FirstOrDefault(c => c.Code.Equals(code));
         }

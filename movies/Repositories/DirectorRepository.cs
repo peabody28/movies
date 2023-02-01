@@ -31,9 +31,13 @@ namespace movies.Repositories
             return director.Entity;
         }
 
-        public IDirector Object(string firstName, string lastName)
+        public IDirector? Object(string firstName, string? lastName)
         {
-            return FilmDbContext.Director.FirstOrDefault(d => d.FirstName.Equals(firstName) && d.LastName.Equals(lastName));
+            var firstNameFilter = (IDirector d) => d.FirstName.Equals(firstName);
+
+            var lastNameFilter = (IDirector d) => string.IsNullOrWhiteSpace(lastName) || (d.LastName != null && d.LastName.Equals(lastName));
+
+            return FilmDbContext.Director.FirstOrDefault(d => firstNameFilter(d) && lastNameFilter(d));
         }
     }
 }

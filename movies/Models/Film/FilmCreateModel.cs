@@ -14,13 +14,13 @@ namespace movies.Models.Film
         public string DirectorFirstName { get; set; }
 
         [JsonProperty("directorLastName")]
-        public string DirectorLastName { get; set; }
+        public string? DirectorLastName { get; set; }
 
         [JsonProperty("countryCode")]
         public string CountryCode { get; set; }
 
         [JsonProperty("year")]
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         [JsonProperty("ratingTypeName")]
         public string RatingTypeName { get; set; }

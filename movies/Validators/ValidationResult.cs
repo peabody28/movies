@@ -14,7 +14,7 @@
             _errors = new List<ValidationError>();
         }
 
-        public ValidationResult(string code, string message, object customState = null)
+        public ValidationResult(string code, string message, object? customState = null)
         {
             _errors = new List<ValidationError>
             {

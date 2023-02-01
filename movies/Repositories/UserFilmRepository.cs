@@ -38,22 +38,32 @@ namespace movies.Repositories
 
         public IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null)
         {
+            var userFilter = (IUserFilm uf) => uf.User.Equals(user);
+
+            var sectionFilter = (IUserFilm uf) => section != null && uf.Section != null && uf.Section.Equals(section);
+
             return FilmDbContext.UserFilm
                 .Include(uf => uf.Film)
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
-                .Where(uf => uf.User.Equals(user) && (section != null ? uf.Section.Equals(section) : true)).ToList();
+                .Where(uf => userFilter(uf) && sectionFilter(uf)).ToList();
         }
 
-        public IUserFilm Object(IUser user, IFilm film, ISection? section = null)
+        public IUserFilm? Object(IUser user, IFilm film, ISection? section = null)
         {
+            var userFilter = (IUserFilm uf) => uf.User.Equals(user);
+
+            var filmFilter = (IUserFilm uf) => uf.Film.Equals(film);
+
+            var sectionFilter = (IUserFilm uf) => section != null && uf.Section != null && uf.Section.Equals(section);
+
             return FilmDbContext.UserFilm
                 .Include(uf => uf.Film)
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
-                .FirstOrDefault(uf => uf.User.Equals(user) && uf.Film.Equals(film) && (section != null ? uf.Section.Equals(section) : true));
+                .FirstOrDefault(uf => userFilter(uf) && filmFilter(uf) && sectionFilter(uf));
         }
     }
 }

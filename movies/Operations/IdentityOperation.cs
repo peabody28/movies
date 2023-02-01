@@ -14,7 +14,7 @@ namespace movies.Operations
             UserRepository = userRepository;
         }
 
-        public ClaimsIdentity Object(string nickName, string password)
+        public ClaimsIdentity? Object(string nickName, string password)
         {
             var passwordHash = MD5Helper.Hash(password);
 

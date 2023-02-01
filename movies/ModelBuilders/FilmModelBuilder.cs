@@ -24,7 +24,7 @@ namespace movies.ModelBuilders
                 Description = film.Description,
                 DirectorName = string.Join(" ", film.Director.FirstName, film.Director.LastName),
                 CountryName = film.Country.Name,
-                Year = film.Year,
+                Year = film?.Year,
                 Ratings = ratings.Select(r => new RatingModel
                 {
                     RatingTypeName = r.RatingType.Name,

@@ -59,7 +59,7 @@ namespace movies.Controllers
             if(country == null)
                 country = CountryRepository.Create(model.CountryCode);
 
-            var film = FilmRepository.Create(director, ratingType, model.RatingValue, country, model.Title, model.Description, model.Year);
+            var film = FilmRepository.Create(director, ratingType!, model.RatingValue, country, model.Title, model.Description, model.Year);
 
             return FilmModelBuilder.Build(film);
         }
@@ -78,7 +78,7 @@ namespace movies.Controllers
         [Route("/User/Film")]
         public UserFilmsModel UserFilms([FromQuery] UserFilmsRequestModel model)
         {
-            var section = SectionRepository.Object(model.SectionName);
+            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
             var userFilms = UserFilmRepository.Collection(CurrentUser, section);
 
             return new UserFilmsModel
@@ -94,9 +94,9 @@ namespace movies.Controllers
         public HttpResponseMessage UserFilmCreate(UserFilmAddModel model)
         {
             var film = FilmRepository.Object(model.FilmId);
-            var section = SectionRepository.Object(model.SectionName);
+            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
 
-            UserFilmRepository.Create(CurrentUser, film, section);
+            UserFilmRepository.Create(CurrentUser, film!, section);
 
             return new HttpResponseMessage(HttpStatusCode.Created);
         }

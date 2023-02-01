@@ -17,7 +17,7 @@ namespace movies.Repositories
             return FilmDbContext.Section.ToList();
         }
 
-        public ISection Object(string name)
+        public ISection? Object(string name)
         {
             return FilmDbContext.Section.FirstOrDefault(section => section.Name.Equals(name));
         }
