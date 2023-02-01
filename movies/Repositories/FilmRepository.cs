@@ -19,7 +19,7 @@ namespace movies.Repositories
 
         public IFilm? Object(Guid id)
         {
-            return FilmDbContext.Film.FirstOrDefault(film => film.Id.Equals(id));
+            return FilmDbContext.Film.Include(f => f.Country).Include(f => f.Director).FirstOrDefault(film => film.Id.Equals(id));
         }
 
         public IFilm? Object(string title)
