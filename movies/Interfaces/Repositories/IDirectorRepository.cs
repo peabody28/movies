@@ -4,7 +4,7 @@ namespace movies.Interfaces.Repositories
 {
     public interface IDirectorRepository
     {
-        IDirector Create(string firstName, string? lastName = null, int? age = null);
-        IDirector Object(string firstName, string lastName);
+        IDirector Create(string name, int? age = null);
+        IDirector? Object(string name);
     }
 }

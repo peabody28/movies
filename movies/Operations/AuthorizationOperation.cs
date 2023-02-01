@@ -24,7 +24,7 @@ namespace movies.Operations
             var audience = Configuration.GetSection("AuthOptions:AUDIENCE").Value;
             var lifetime = Configuration.GetSection("AuthOptions:LIFETIME").Get<double>();
             var key = Configuration.GetSection("AuthOptions:KEY").Value;
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key!));
 
             var expirationDate = now.Add(TimeSpan.FromMinutes(lifetime));
             var jwt = new JwtSecurityToken(issuer, audience, identity.Claims, now,

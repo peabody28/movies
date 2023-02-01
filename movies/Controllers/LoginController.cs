@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Operations;
-using movies.Interfaces.Repositories;
 using movies.Models.Login;
 
 namespace movies.Controllers
@@ -16,7 +15,7 @@ namespace movies.Controllers
 
         #endregion
 
-        public LoginController(IUserRepository userRepository, IIdentityOperation identityOperation, IAuthorizationOperation authorizationOperation) : base(userRepository)
+        public LoginController(IUserOperation userOperation, IIdentityOperation identityOperation, IAuthorizationOperation authorizationOperation) : base(userOperation)
         {
             IdentityOperation = identityOperation;
             AuthorizationOperation = authorizationOperation;

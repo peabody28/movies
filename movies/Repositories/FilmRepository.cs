@@ -17,14 +17,17 @@ namespace movies.Repositories
             ServiceProvider = serviceProvider;
         }
 
-        public IFilm Object(Guid id)
+        public IFilm? Object(Guid id)
         {
             return FilmDbContext.Film.FirstOrDefault(film => film.Id.Equals(id));
         }
 
-        public IFilm Object(string title)
+        public IFilm? Object(string title)
         {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).FirstOrDefault(f => f.Title.Equals(title));
+            return FilmDbContext.Film
+                .Include(c => c.Country)
+                .Include(c => c.Director)
+                .FirstOrDefault(f => !string.IsNullOrEmpty(f.Title) ? f.Title.Equals(title) : false);
         }
 
         public void Update(IFilm film)
@@ -35,10 +38,10 @@ namespace movies.Repositories
 
         public IEnumerable<IFilm> Collection()
         {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director);
+            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).ToList();
         }
 
-        public IFilm Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int year)
+        public IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string? description, int? year = null)
         {
             var transactionContext = FilmDbContext.Database.BeginTransaction();
 

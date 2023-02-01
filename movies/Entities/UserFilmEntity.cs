@@ -18,5 +18,7 @@ namespace movies.Entities
         [ForeignKey("Section")]
         public Guid? SectionFk { get; set; }
         public ISection? Section { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

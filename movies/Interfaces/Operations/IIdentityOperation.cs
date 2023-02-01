@@ -4,6 +4,6 @@ namespace movies.Interfaces.Operations
 {
     public interface IIdentityOperation
     {
-        ClaimsIdentity Object(string nickName, string password);
+        ClaimsIdentity? Object(string nickName, string password);
     }
 }

@@ -4,9 +4,9 @@
     {
         Guid Id { get; set; }
 
-        string Title { get; set; }
+        string? Title { get; set; }
 
-        string Description { get; set; }
+        string? Description { get; set; }
 
         IDirector Director { get; set; }
 
@@ -16,6 +16,8 @@
 
         Guid CountryFk { get; set; }    
 
-        int Year { get; set; }
+        int? Year { get; set; }
+
+        bool IsDeleted { get; set; }
     }
 }

@@ -16,12 +16,11 @@ namespace movies.Repositories
             ServiceProvider = serviceProvider;
         }
 
-        public IDirector Create(string firstName, string? lastName = null, int? age = null)
+        public IDirector Create(string name, int? age = null)
         {
             var directorEntity = ServiceProvider.GetRequiredService<IDirector>();
             directorEntity.Id = Guid.NewGuid();
-            directorEntity.FirstName = firstName;
-            directorEntity.LastName = lastName;
+            directorEntity.Name = name;
             directorEntity.Age = age;
 
             var director = FilmDbContext.Director.Add(directorEntity as DirectorEntity);
@@ -31,9 +30,9 @@ namespace movies.Repositories
             return director.Entity;
         }
 
-        public IDirector Object(string firstName, string lastName)
+        public IDirector? Object(string name)
         {
-            return FilmDbContext.Director.FirstOrDefault(d => d.FirstName.Equals(firstName) && d.LastName.Equals(lastName));
+            return FilmDbContext.Director.FirstOrDefault(d => d.Name.Equals(name));
         }
     }
 }

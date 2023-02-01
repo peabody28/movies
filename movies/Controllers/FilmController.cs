@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
+using movies.ModelBuilders;
 using movies.Models.Film;
-using System.Net;
 
 namespace movies.Controllers
 {
@@ -18,27 +19,31 @@ namespace movies.Controllers
 
         public ICountryRepository CountryRepository { get; set; }
 
-        public IUserFilmRepository UserFilmRepository { get; set; }
+        #endregion
+
+        #region [ Dependency -> Model Builders ]
+
+        public FilmModelBuilder FilmModelBuilder { get; set; }
 
         #endregion
 
-        public FilmController(IUserRepository userRepository, IFilmRepository filmRepository, IDirectorRepository directorRepository,
-            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, IUserFilmRepository userFilmRepository) : base(userRepository)
+        public FilmController(IUserOperation userOperation, IFilmRepository filmRepository, IDirectorRepository directorRepository,
+            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, FilmModelBuilder filmModelBuilder) : base(userOperation)
         {
             FilmRepository = filmRepository;
             DirectorRepository = directorRepository;
             RatingTypeRepository = ratingTypeRepository;
             CountryRepository = countryRepository;
-            UserFilmRepository = userFilmRepository;
+            FilmModelBuilder = filmModelBuilder;
         }
 
         [Authorize]
         [HttpPost]
         public FilmModel Create(FilmCreateModel model)
         {
-            var director = DirectorRepository.Object(model.DirectorFirstName, model.DirectorLastName);
+            var director = DirectorRepository.Object(model.DirectorName);
             if(director == null) 
-                director = DirectorRepository.Create(model.DirectorFirstName, model.DirectorLastName);
+                director = DirectorRepository.Create(model.DirectorName);
 
             var ratingType = RatingTypeRepository.Object(model.RatingTypeName);
 
@@ -46,18 +51,9 @@ namespace movies.Controllers
             if(country == null)
                 country = CountryRepository.Create(model.CountryCode);
 
-            var film = FilmRepository.Create(director, ratingType, model.RatingValue, country, model.Title, model.Description, model.Year);
+            var film = FilmRepository.Create(director, ratingType!, model.RatingValue, country, model.Title, model.Description, model.Year);
 
-            var directorName = string.Join(" ", film.Director.FirstName, film.Director.LastName);
-
-            return new FilmModel
-            {
-                Title = film.Title,
-                Description = film.Description,
-                DirectorName = directorName,
-                CountryName = film.Country.Name,
-                Year = film.Year,
-            };
+            return FilmModelBuilder.Build(film);
         }
 
         [Authorize]
@@ -66,55 +62,7 @@ namespace movies.Controllers
         {
             var films = FilmRepository.Collection();
 
-            return films.Select(film => new FilmModel
-            {
-                Id = film.Id,
-                Title = film.Title,
-                Description = film.Description,
-                DirectorName = string.Join(" ", film.Director.FirstName, film.Director.LastName),
-                CountryName = film.Country.Name,
-                Year = film.Year,
-            });
-        }
-
-        [HttpPut]
-        public HttpResponseMessage Update(FilmUpdateModel model)
-        {
-            var film = FilmRepository.Object(model.Title);
-            film.Description = model.Description;
-            FilmRepository.Update(film);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-
-        [Authorize]
-        [HttpGet]
-        [Route("/User/Film")]
-        public IEnumerable<FilmModel> GetUserFilms()
-        {
-            var userFilms = UserFilmRepository.Collection(CurrentUser);
-
-            return userFilms.Select(userFilm => new FilmModel
-            {
-                Id = userFilm.Film.Id,
-                Title = userFilm.Film.Title,
-                Description = userFilm.Film.Description,
-                DirectorName = string.Join(" ", userFilm.Film.Director.FirstName, userFilm.Film.Director.LastName),
-                CountryName = userFilm.Film.Country.Name,
-                Year = userFilm.Film.Year,
-            });
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("/User/Film")]
-        public HttpResponseMessage Add(UserFilmAddModel model)
-        {
-            var film = FilmRepository.Object(model.FilmId);
-
-            UserFilmRepository.Create(CurrentUser, film);
-
-            return new HttpResponseMessage(HttpStatusCode.Created);
+            return films.Select(film => FilmModelBuilder.Build(film));
         }
     }
 }

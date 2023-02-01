@@ -12,7 +12,7 @@ namespace movies.Repositories
             FilmDbContext = filmDbContext;
         }
 
-        public IRatingType Object(string name)
+        public IRatingType? Object(string name)
         {
             return FilmDbContext.RatingType.FirstOrDefault(r => r.Name.Equals(name));
         }

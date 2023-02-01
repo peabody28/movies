@@ -5,6 +5,13 @@ namespace movies.Interfaces.Repositories
     public interface IUserFilmRepository
     {
         IUserFilm Create(IUser user, IFilm film, ISection? section = null);
-        IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null);
+
+        IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null, bool isDeleted = false);
+
+        IUserFilm? Object(Guid id, bool isDeleted = false);
+
+        IUserFilm? Object(IUser user, IFilm film, ISection? section = null, bool isDeleted = false);
+
+        void Delete(IUserFilm userFilm);
     }
 }

@@ -36,14 +36,40 @@ namespace movies.Repositories
             return userFilm.Entity;
         }
 
-        public IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null)
+        public IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null, bool isDeleted = false)
         {
             return FilmDbContext.UserFilm
                 .Include(uf => uf.Film)
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
-                .Where(uf => uf.User.Equals(user) && (section != null ? uf.Section.Equals(section) : true));
+                .Include(uf => uf.Section)
+                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted)).ToList();
+        }
+
+        public IUserFilm? Object(Guid id, bool isDeleted = false)
+        {
+            return FilmDbContext.UserFilm
+                .Include(uf => uf.Film)
+                .Include(uf => uf.User)
+                .Include(uf => uf.Film.Director)
+                .Include(uf => uf.Film.Country)
+                .FirstOrDefault(uf => uf.Id.Equals(id) && uf.IsDeleted.Equals(isDeleted));
+        }
+
+        public IUserFilm? Object(IUser user, IFilm film, ISection? section = null, bool isDeleted = false)
+        {
+            return FilmDbContext.UserFilm.Include(uf => uf.Film).Include(uf => uf.User).Include(uf => uf.Film.Director).Include(uf => uf.Film.Country)
+                .FirstOrDefault(uf => uf.User.Equals(user) && uf.Film.Equals(film) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted));
+        }
+
+        public void Delete(IUserFilm userFilm)
+        {
+            userFilm.IsDeleted = true;
+
+            FilmDbContext.Update(userFilm);
+
+            FilmDbContext.SaveChanges();
         }
     }
 }

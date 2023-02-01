@@ -16,14 +16,12 @@ namespace movies.Repositories
             ServiceProvider = serviceProvider;
         }
 
-        public IUser Create(string nickName, string email, string passwordHash, string firstName = null, string lastName = null)
+        public IUser Create(string nickName, string email, string passwordHash)
         {
             try
             {
                 var userEntity = ServiceProvider.GetRequiredService<IUser>();
                 userEntity.Id = Guid.NewGuid();
-                userEntity.FirstName = firstName;
-                userEntity.LastName = lastName;
                 userEntity.NickName = nickName;
                 userEntity.Email = email;
                 userEntity.PasswordHash = passwordHash;
@@ -36,17 +34,17 @@ namespace movies.Repositories
             }
             catch
             {
-                return null;
+                return null!;
             }
         }
 
 
-        public IUser Object(string nickName, string passwordHash)
+        public IUser? Object(string nickName, string passwordHash)
         {
             return FilmDbContext.User.FirstOrDefault(c => c.NickName.Equals(nickName) && c.PasswordHash.Equals(passwordHash));
         }
 
-        public IUser Object(string nickName)
+        public IUser? Object(string nickName)
         {
             return FilmDbContext.User.FirstOrDefault(c => c.NickName.Equals(nickName));
         }
