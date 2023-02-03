@@ -11,7 +11,7 @@ namespace movies
             ServiceProvider = serviceProvider;
         }
 
-        public void ResolveDependency(object instance)
+        public virtual void ResolveDependency(object instance)
         {
             if (ServiceProvider == null)
                 return;
