@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
+using movies.Models.Common;
 using movies.Models.Film;
 
 namespace movies.Controllers
@@ -58,11 +59,15 @@ namespace movies.Controllers
 
         [Authorize]
         [HttpGet]
-        public IEnumerable<FilmModel> Get()
+        public PaginationResponseModel<FilmModel> Get([FromQuery] FilmGetModel model)
         {
-            var films = FilmRepository.Collection();
+            var films = FilmRepository.Collection(model.PageSize, model.PageNumber);
 
-            return films.Select(film => FilmModelBuilder.Build(film));
+            return new PaginationResponseModel<FilmModel>
+            {
+                TotalCount = FilmRepository.Count(),
+                Collection = films.Select(film => FilmModelBuilder.Build(film))
+            };
         }
     }
 }

@@ -41,6 +41,16 @@ namespace movies.Repositories
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).ToList();
         }
 
+        public IEnumerable<IFilm> Collection(int pageSize, int pageNumber)
+        {
+            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public int Count()
+        {
+            return FilmDbContext.Film.Count();
+        }
+
         public IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string? description, int? year = null)
         {
             var transactionContext = FilmDbContext.Database.BeginTransaction();

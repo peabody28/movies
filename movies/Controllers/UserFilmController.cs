@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
+using movies.Models.Common;
 using movies.Models.UserFilm;
 using System.Net;
 
@@ -51,13 +52,17 @@ namespace movies.Controllers
         [Authorize]
         [HttpGet]
         [Route("/User/Film")]
-        public IEnumerable<UserFilmModel> Get([FromQuery] UserFilmsRequestModel model)
+        public PaginationResponseModel<UserFilmModel> Get([FromQuery] UserFilmsRequestModel model)
         {
             var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
 
-            var userFilms = UserFilmRepository.Collection(CurrentUser, section);
+            var userFilms = UserFilmRepository.Collection(CurrentUser, model.PageSize, model.PageNumber, section);
 
-            return userFilms.Select(UserFilmModelBuilder.Build);
+            return new PaginationResponseModel<UserFilmModel>
+            {
+                TotalCount = UserFilmRepository.Count(CurrentUser, section),
+                Collection = userFilms.Select(UserFilmModelBuilder.Build)
+            };
         }
 
         [Authorize]

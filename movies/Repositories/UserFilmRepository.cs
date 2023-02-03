@@ -47,6 +47,25 @@ namespace movies.Repositories
                 .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted)).ToList();
         }
 
+        public IEnumerable<IUserFilm> Collection(IUser user, int pageSize, int pageNumber, ISection? section = null, bool isDeleted = false)
+        {
+            return FilmDbContext.UserFilm
+                .Include(uf => uf.Film)
+                .Include(uf => uf.User)
+                .Include(uf => uf.Film.Director)
+                .Include(uf => uf.Film.Country)
+                .Include(uf => uf.Section)
+                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted))
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public int Count(IUser user, ISection? section = null, bool isDeleted = false)
+        {
+            return FilmDbContext.UserFilm
+                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted))
+                .Count();
+        }
+
         public IUserFilm? Object(Guid id, bool isDeleted = false)
         {
             return FilmDbContext.UserFilm

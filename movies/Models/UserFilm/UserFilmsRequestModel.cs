@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using movies.Models.Common;
+using Newtonsoft.Json;
 
 namespace movies.Models.UserFilm
 {
-    public class UserFilmsRequestModel
+    public class UserFilmsRequestModel : PaginationModel
     {
         [JsonProperty("sectionName")]
         public string? SectionName { get; set; }
