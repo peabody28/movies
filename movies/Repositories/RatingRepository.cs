@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using movies.Attributes;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 
@@ -6,11 +7,12 @@ namespace movies.Repositories
 {
     public class RatingRepository : IRatingRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        public RatingRepository(FilmDbContext filmDbContext)
+        public RatingRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public IRating? Object(IFilm film, IRatingType ratingType)

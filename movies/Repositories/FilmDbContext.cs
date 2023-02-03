@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using movies.Attributes;
 using movies.Entities;
 
 namespace movies.Repositories
 {
     public class FilmDbContext : DbContext
     {
-        private IConfiguration Configuration { get; set; }
+        [Dependency]
+        public IConfiguration Configuration { get; set; }
 
-        public FilmDbContext(IConfiguration config)
+        public FilmDbContext(DependencyFactory dependencyFactory)
         {
-            Configuration = config;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public DbSet<UserEntity> User { get; set; }

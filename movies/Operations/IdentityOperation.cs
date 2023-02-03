@@ -1,4 +1,5 @@
-﻿using movies.Helpers;
+﻿using movies.Attributes;
+using movies.Helpers;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using System.Security.Claims;
@@ -7,11 +8,12 @@ namespace movies.Operations
 {
     public class IdentityOperation : IIdentityOperation
     {
+        [Dependency]
         public IUserRepository UserRepository { get; set; }
 
-        public IdentityOperation(IUserRepository userRepository)
+        public IdentityOperation(DependencyFactory dependencyFactory)
         {
-            UserRepository = userRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public ClaimsIdentity? Object(string nickName, string password)

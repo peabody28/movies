@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using movies;
 using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
@@ -39,6 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<FilmDbContext>();
@@ -61,7 +63,7 @@ builder.Services.AddTransient<ISection, SectionEntity>();
 builder.Services.AddTransient<IUserFilm, UserFilmEntity>();
 
 builder.Services.AddScoped<IIdentityOperation, IdentityOperation>();
-builder.Services.AddScoped<IAuthorizationOperation, AuthorizationOperation>();
+builder.Services.AddSingleton<IAuthorizationOperation, AuthorizationOperation>();
 builder.Services.AddScoped<IUserOperation, UserOperation>();
 
 builder.Services.AddScoped<FilmValidation, FilmValidation>();
@@ -71,6 +73,7 @@ builder.Services.AddScoped<UserValidation, UserValidation>();
 builder.Services.AddScoped<FilmModelBuilder, FilmModelBuilder>();
 builder.Services.AddScoped<UserFilmModelBuilder, UserFilmModelBuilder>();
 
+builder.Services.AddSingleton<DependencyFactory, DependencyFactory>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddCors();

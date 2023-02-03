@@ -1,15 +1,17 @@
-﻿using movies.Interfaces.Repositories;
+﻿using movies.Attributes;
+using movies.Interfaces.Repositories;
 using movies.Validators;
 
 namespace movies.Validations.User
 {
     public class UserValidation
     {
+        [Dependency]
         public IUserRepository UserRepository { get; set; }
 
-        public UserValidation(IUserRepository userRepository) 
+        public UserValidation(DependencyFactory dependencyFactory)
         {
-            UserRepository = userRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public ValidationResult CheckDuplicates(string nickName)

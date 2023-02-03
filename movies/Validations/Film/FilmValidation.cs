@@ -1,4 +1,5 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 using movies.Validators;
 
@@ -8,23 +9,23 @@ namespace movies.Validations.Film
     {
         #region [ Dependency -> Repositories ]
 
+        [Dependency]
         public IRatingTypeRepository RatingTypeRepository { get; set; }
 
+        [Dependency]
         public IFilmRepository FilmRepository { get; set; }
 
+        [Dependency]
         public ISectionRepository SectionRepository { get; set; }
 
+        [Dependency]
         public IUserFilmRepository UserFilmRepository { get; set; }
 
         #endregion
 
-        public FilmValidation(IRatingTypeRepository ratingTypeRepository, IFilmRepository filmRepository,
-            ISectionRepository sectionRepository, IUserFilmRepository userFilmRepository) 
+        public FilmValidation(DependencyFactory dependencyFactory)
         {
-            RatingTypeRepository = ratingTypeRepository;
-            FilmRepository = filmRepository;
-            SectionRepository = sectionRepository;
-            UserFilmRepository = userFilmRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public ValidationResult ValidateRatingTypeName(string name)

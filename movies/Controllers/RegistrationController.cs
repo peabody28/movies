@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using movies.Attributes;
 using movies.Helpers;
-using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
 using movies.Models.Registration;
 
@@ -9,11 +9,12 @@ namespace movies.Controllers
 {
     public class RegistrationController : BaseController
     {
+        [Dependency]
         public IUserRepository UserRepository { get; set; }
 
-        public RegistrationController(IUserRepository userRepository, IUserOperation userOperation) : base(userOperation) 
+        public RegistrationController(DependencyFactory dependencyFactory) 
         {
-            UserRepository = userRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         [HttpPost]

@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
+using movies.Attributes;
 using movies.Interfaces.Operations;
 using movies.Models.Login;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,11 +10,12 @@ namespace movies.Operations
 {
     public class AuthorizationOperation : IAuthorizationOperation
     {
+        [Dependency]
         public IConfiguration Configuration { get; set; }
 
-        public AuthorizationOperation(IConfiguration configuration)
+        public AuthorizationOperation(DependencyFactory dependencyFactory)
         {
-            Configuration = configuration;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public TokenDtoModel GenerateToken(ClaimsIdentity identity)

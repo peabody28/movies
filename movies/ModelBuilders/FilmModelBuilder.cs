@@ -1,4 +1,5 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 using movies.Models.Film;
 
@@ -6,11 +7,12 @@ namespace movies.ModelBuilders
 {
     public class FilmModelBuilder
     {
+        [Dependency]
         public IRatingRepository RatingRepository { get; set; }
 
-        public FilmModelBuilder(IRatingRepository ratingRepository) 
+        public FilmModelBuilder(DependencyFactory dependencyFactory) 
         {
-            RatingRepository = ratingRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public FilmModel Build(IFilm film)

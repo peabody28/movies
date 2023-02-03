@@ -1,4 +1,5 @@
-﻿using movies.Interfaces.Repositories;
+﻿using movies.Attributes;
+using movies.Interfaces.Repositories;
 using movies.Validators;
 
 namespace movies.Validations.Section
@@ -7,13 +8,14 @@ namespace movies.Validations.Section
     {
         #region [ Dependency -> Repositories ]
 
+        [Dependency]
         public ISectionRepository SectionRepository { get; set; }
 
         #endregion
 
-        public SectionValidation(ISectionRepository sectionRepository) 
+        public SectionValidation(DependencyFactory dependencyFactory)
         {
-            SectionRepository = sectionRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public ValidationResult Validate(string? name)

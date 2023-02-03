@@ -1,15 +1,17 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 
 namespace movies.Repositories
 {
     public class RatingTypeRepository : IRatingTypeRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        public RatingTypeRepository(FilmDbContext filmDbContext)
+        public RatingTypeRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public IRatingType? Object(string name)

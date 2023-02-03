@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using movies.Attributes;
 using movies.Interfaces.Operations;
 using movies.Models.Login;
 
@@ -9,16 +10,17 @@ namespace movies.Controllers
     {
         #region [ Dependency -> Operations ]
 
+        [Dependency]
         public IIdentityOperation IdentityOperation { get; set; }
 
+        [Dependency]
         public IAuthorizationOperation AuthorizationOperation { get; set; }
 
         #endregion
 
-        public LoginController(IUserOperation userOperation, IIdentityOperation identityOperation, IAuthorizationOperation authorizationOperation) : base(userOperation)
+        public LoginController(DependencyFactory dependencyFactory) 
         {
-            IdentityOperation = identityOperation;
-            AuthorizationOperation = authorizationOperation;
+            dependencyFactory.ResolveDependency(this);
         }
 
         [HttpPost]

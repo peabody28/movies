@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using movies.Attributes;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
 
@@ -6,14 +7,10 @@ namespace movies.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BaseController : ControllerBase
+    public abstract class BaseController : ControllerBase
     {
+        [Dependency]
         public IUserOperation UserOperation { get; set; }
-
-        public BaseController(IUserOperation userOperation)
-        { 
-            UserOperation = userOperation;
-        }
 
         public IUser CurrentUser { 
             get

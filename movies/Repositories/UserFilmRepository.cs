@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using movies.Attributes;
 using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
@@ -7,14 +8,15 @@ namespace movies.Repositories
 {
     public class UserFilmRepository : IUserFilmRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        private IServiceProvider ServiceProvider { get; set; }
+        [Dependency]
+        public IServiceProvider ServiceProvider { get; set; }
 
-        public UserFilmRepository(FilmDbContext filmDbContext, IServiceProvider serviceProvider)
+        public UserFilmRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
-            ServiceProvider = serviceProvider;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public IUserFilm Create(IUser user, IFilm film, ISection? section = null)
