@@ -19,8 +19,7 @@ namespace movies
             var properties = instance.GetType().GetProperties();
             foreach (var property in properties)
             {
-                var dependencyAttributes = (DependencyAttribute[])Attribute.GetCustomAttributes(property, typeof(DependencyAttribute));
-                foreach (var attribute in dependencyAttributes)
+                if(Attribute.IsDefined(property, typeof(DependencyAttribute)))
                 {
                     var value = ServiceProvider.CreateScope().ServiceProvider.GetRequiredService(property.PropertyType);
                     property.SetValue(instance, value);
