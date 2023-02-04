@@ -61,11 +61,11 @@ namespace movies.Controllers
         [HttpGet]
         public PaginationResponseModel<FilmModel> Get([FromQuery] FilmGetModel model)
         {
-            var films = FilmRepository.Collection(model.PageSize, model.PageNumber);
+            var films = FilmRepository.Collection(model.PageSize, model.PageNumber, out int totalCount);
 
             return new PaginationResponseModel<FilmModel>
             {
-                TotalCount = FilmRepository.Count(),
+                TotalCount = totalCount,
                 Collection = films.Select(film => FilmModelBuilder.Build(film))
             };
         }
@@ -73,11 +73,15 @@ namespace movies.Controllers
         [Authorize]
         [HttpGet]
         [Route("Find")]
-        public IEnumerable<FilmModel> Find([FromQuery] FilmFindModel model)
+        public PaginationResponseModel<FilmModel> Find([FromQuery] UserFilmFindModel model)
         {
-            var films = FilmRepository.Collection(model.Text);
+            var films = FilmRepository.Collection(model.Text, model.PageSize, model.PageNumber, out var totalCount);
 
-            return films.Select(film => FilmModelBuilder.Build(film));
+            return new PaginationResponseModel<FilmModel>
+            {
+                TotalCount = totalCount,
+                Collection = films.Select(film => FilmModelBuilder.Build(film))
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using movies.Attributes;
 using movies.Entities;
+using System.Diagnostics;
 
 namespace movies.Repositories
 {
@@ -28,6 +29,7 @@ namespace movies.Repositories
             var connString = Configuration.GetConnectionString("moviesDatabase");
 
             optionsBuilder.UseSqlServer(connString);
+            optionsBuilder.LogTo(message => Debug.WriteLine(message));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

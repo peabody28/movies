@@ -10,18 +10,14 @@ namespace movies.Interfaces.Repositories
 
         void Update(IFilm film);
 
-        IEnumerable<IFilm> Collection();
-
-        IEnumerable<IFilm> Collection(int pageSize, int pageNumber);
+        IEnumerable<IFilm> Collection(int pageSize, int pageNumber, out int count);
 
         /// <summary>
         /// Find a rows that contains text
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        IEnumerable<IFilm> Collection(string text);
-
-        int Count();
+        IEnumerable<IFilm> Collection(string text, int pageSize, int pageNumber, out int count);
 
         IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string description, int? year = null);
 

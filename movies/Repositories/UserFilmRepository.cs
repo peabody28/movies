@@ -3,6 +3,7 @@ using movies.Attributes;
 using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace movies.Repositories
 {
@@ -38,34 +39,34 @@ namespace movies.Repositories
             return userFilm.Entity;
         }
 
-        public IEnumerable<IUserFilm> Collection(IUser user, ISection? section = null, bool isDeleted = false)
+        public IEnumerable<IUserFilm> Collection(IUser user, int pageSize, int pageNumber, out int count, ISection? section = null, bool isDeleted = false)
         {
-            return FilmDbContext.UserFilm
+            var collection = FilmDbContext.UserFilm
                 .Include(uf => uf.Film)
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
                 .Include(uf => uf.Section)
-                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted)).ToList();
+                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted));
+
+            count = collection.Count();
+
+            return collection.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        public IEnumerable<IUserFilm> Collection(IUser user, int pageSize, int pageNumber, ISection? section = null, bool isDeleted = false)
+        public IEnumerable<IUserFilm> Collection(IUser user, string text, int pageSize, int pageNumber, out int count, ISection? section = null, bool isDeleted = false)
         {
-            return FilmDbContext.UserFilm
+            var collection = FilmDbContext.UserFilm
                 .Include(uf => uf.Film)
                 .Include(uf => uf.User)
                 .Include(uf => uf.Film.Director)
                 .Include(uf => uf.Film.Country)
                 .Include(uf => uf.Section)
-                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted))
-                .Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-        }
+                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted) && EF.Functions.FreeText(uf.Film.Title, text));
 
-        public int Count(IUser user, ISection? section = null, bool isDeleted = false)
-        {
-            return FilmDbContext.UserFilm
-                .Where(uf => uf.User.Equals(user) && (section == null || uf.Section != null && uf.Section.Equals(section)) && uf.IsDeleted.Equals(isDeleted))
-                .Count();
+            count = collection.Count();
+
+            return collection.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public IUserFilm? Object(Guid id, bool isDeleted = false)

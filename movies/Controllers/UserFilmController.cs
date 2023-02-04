@@ -56,11 +56,27 @@ namespace movies.Controllers
         {
             var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
 
-            var userFilms = UserFilmRepository.Collection(CurrentUser, model.PageSize, model.PageNumber, section);
+            var userFilms = UserFilmRepository.Collection(CurrentUser, model.PageSize, model.PageNumber, out var totalCount, section);
 
             return new PaginationResponseModel<UserFilmModel>
             {
-                TotalCount = UserFilmRepository.Count(CurrentUser, section),
+                TotalCount = totalCount,
+                Collection = userFilms.Select(UserFilmModelBuilder.Build)
+            };
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("/User/Film/Find")]
+        public PaginationResponseModel<UserFilmModel> Find([FromQuery] UserFilmFindModel model)
+        {
+            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
+
+            var userFilms = UserFilmRepository.Collection(CurrentUser, model.Text, model.PageSize, model.PageNumber, out var totalCount, section);
+
+            return new PaginationResponseModel<UserFilmModel>
+            {
+                TotalCount = totalCount,
                 Collection = userFilms.Select(UserFilmModelBuilder.Build)
             };
         }

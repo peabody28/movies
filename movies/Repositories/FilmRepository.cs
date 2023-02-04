@@ -38,24 +38,22 @@ namespace movies.Repositories
             FilmDbContext.SaveChanges();
         }
 
-        public IEnumerable<IFilm> Collection()
+        public IEnumerable<IFilm> Collection(int pageSize, int pageNumber, out int count)
         {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).ToList();
+            var collection = FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director);
+
+            count = collection.Count();
+
+            return collection.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        public IEnumerable<IFilm> Collection(int pageSize, int pageNumber)
+        public IEnumerable<IFilm> Collection(string text, int pageSize, int pageNumber, out int count)
         {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-        }
+            var collection = FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Where(f => EF.Functions.FreeText(f.Title, text));
 
-        public IEnumerable<IFilm> Collection(string text)
-        {
-            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Where(f => EF.Functions.FreeText(f.Title, text)).ToList();
-        }
+            count = collection.Count();
 
-        public int Count()
-        {
-            return FilmDbContext.Film.Count();
+            return collection.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public IFilm? Create(IDirector director, IRatingType ratingType, decimal ratingValue, ICountry country, string title, string? description, int? year = null)
