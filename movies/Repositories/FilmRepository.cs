@@ -48,6 +48,11 @@ namespace movies.Repositories
             return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
+        public IEnumerable<IFilm> Collection(string text)
+        {
+            return FilmDbContext.Film.Include(c => c.Country).Include(c => c.Director).Where(f => EF.Functions.FreeText(f.Title, text)).ToList();
+        }
+
         public int Count()
         {
             return FilmDbContext.Film.Count();

@@ -69,5 +69,15 @@ namespace movies.Controllers
                 Collection = films.Select(film => FilmModelBuilder.Build(film))
             };
         }
+
+        [Authorize]
+        [HttpGet]
+        [Route("Find")]
+        public IEnumerable<FilmModel> Find([FromQuery] FilmFindModel model)
+        {
+            var films = FilmRepository.Collection(model.Text);
+
+            return films.Select(film => FilmModelBuilder.Build(film));
+        }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
 using movies.Operations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using test.movies.Mocks;
 
 namespace test.movies.Operations
