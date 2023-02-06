@@ -1,7 +1,7 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
-using movies.Repositories;
 
 namespace movies.Operations
 {
@@ -9,12 +9,13 @@ namespace movies.Operations
     {
         private readonly IHttpContextAccessor HttpContextAccessor;
 
+        [Dependency]
         public IUserRepository UserRepository { get; set; }
 
-        public UserOperation(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public UserOperation(DependencyFactory dependencyFactory, IHttpContextAccessor httpContextAccessor)
         {
+            dependencyFactory.ResolveDependency(this);
             HttpContextAccessor = httpContextAccessor;
-            UserRepository = userRepository;
         }
 
         public IUser? CurrentUser

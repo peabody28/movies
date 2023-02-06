@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using movies.Interfaces.Operations;
+using movies.Attributes;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
 using movies.Models.Common;
@@ -13,27 +13,27 @@ namespace movies.Controllers
     {
         #region [ Dependency -> Repositories ]
 
+        [Dependency]
         public ISectionRepository SectionRepository { get; set; }
 
+        [Dependency]
         public IUserFilmRepository UserFilmRepository { get; set; }
 
+        [Dependency]
         public IFilmRepository FilmRepository { get; set; }
 
         #endregion
 
         #region [ Dependency -> Model Builders ]
 
+        [Dependency]
         public UserFilmModelBuilder UserFilmModelBuilder { get; set; }
 
         #endregion
 
-        public UserFilmController(IUserOperation userOperation, UserFilmModelBuilder userFilmModelBuilder, ISectionRepository sectionRepository,
-            IUserFilmRepository userFilmRepository, IFilmRepository filmRepository) : base(userOperation)
+        public UserFilmController(DependencyFactory dependencyFactory)
         {
-            SectionRepository = sectionRepository;
-            UserFilmRepository = userFilmRepository;
-            FilmRepository = filmRepository;
-            UserFilmModelBuilder = userFilmModelBuilder;
+            dependencyFactory.ResolveDependency(this);
         }
 
         [Authorize]
@@ -56,11 +56,27 @@ namespace movies.Controllers
         {
             var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
 
-            var userFilms = UserFilmRepository.Collection(CurrentUser, model.PageSize, model.PageNumber, section);
+            var userFilms = UserFilmRepository.Collection(CurrentUser, model.PageSize, model.PageNumber, out var totalCount, section);
 
             return new PaginationResponseModel<UserFilmModel>
             {
-                TotalCount = UserFilmRepository.Count(CurrentUser, section),
+                TotalCount = totalCount,
+                Collection = userFilms.Select(UserFilmModelBuilder.Build)
+            };
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("/User/Film/Find")]
+        public PaginationResponseModel<UserFilmModel> Find([FromQuery] UserFilmFindModel model)
+        {
+            var section = !string.IsNullOrWhiteSpace(model.SectionName) ? SectionRepository.Object(model.SectionName) : null;
+
+            var userFilms = UserFilmRepository.Collection(CurrentUser, model.Text, model.PageSize, model.PageNumber, out var totalCount, section);
+
+            return new PaginationResponseModel<UserFilmModel>
+            {
+                TotalCount = totalCount,
                 Collection = userFilms.Select(UserFilmModelBuilder.Build)
             };
         }

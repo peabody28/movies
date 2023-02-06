@@ -1,15 +1,17 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 
 namespace movies.Repositories
 {
     public class SectionRepository : ISectionRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        public SectionRepository(FilmDbContext filmDbContext)
+        public SectionRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public IEnumerable<ISection> Collection()

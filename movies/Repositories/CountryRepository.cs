@@ -1,4 +1,5 @@
-﻿using movies.Entities;
+﻿using movies.Attributes;
+using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 
@@ -6,14 +7,15 @@ namespace movies.Repositories
 {
     public class CountryRepository : ICountryRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        private IServiceProvider ServiceProvider { get; set; }
+        [Dependency]
+        public IServiceProvider ServiceProvider { get; set; }
 
-        public CountryRepository(FilmDbContext filmDbContext, IServiceProvider serviceProvider)
+        public CountryRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
-            ServiceProvider = serviceProvider;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public ICountry Create(string code, string? name = null)

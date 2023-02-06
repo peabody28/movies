@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using movies.Attributes;
 using movies.Entities;
+using System.Diagnostics;
 
 namespace movies.Repositories
 {
     public class FilmDbContext : DbContext
     {
-        private IConfiguration Configuration { get; set; }
+        [Dependency]
+        public IConfiguration Configuration { get; set; }
 
-        public FilmDbContext(IConfiguration config)
+        public FilmDbContext(DependencyFactory dependencyFactory)
         {
-            Configuration = config;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public DbSet<UserEntity> User { get; set; }
@@ -26,6 +29,7 @@ namespace movies.Repositories
             var connString = Configuration.GetConnectionString("moviesDatabase");
 
             optionsBuilder.UseSqlServer(connString);
+            optionsBuilder.LogTo(message => Debug.WriteLine(message));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

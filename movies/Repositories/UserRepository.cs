@@ -1,4 +1,5 @@
-﻿using movies.Entities;
+﻿using movies.Attributes;
+using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Repositories;
 
@@ -6,14 +7,15 @@ namespace movies.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private FilmDbContext FilmDbContext { get; set; }
+        [Dependency]
+        public FilmDbContext FilmDbContext { get; set; }
 
-        private IServiceProvider ServiceProvider { get; set; }
+        [Dependency]
+        public IServiceProvider ServiceProvider { get; set; }
 
-        public UserRepository(FilmDbContext filmDbContext, IServiceProvider serviceProvider)
+        public UserRepository(DependencyFactory dependencyFactory)
         {
-            FilmDbContext = filmDbContext;
-            ServiceProvider = serviceProvider;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public IUser Create(string nickName, string email, string passwordHash)

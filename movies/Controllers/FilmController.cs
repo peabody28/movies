@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using movies.Interfaces.Operations;
+using movies.Attributes;
 using movies.Interfaces.Repositories;
 using movies.ModelBuilders;
 using movies.Models.Common;
@@ -12,30 +12,30 @@ namespace movies.Controllers
     {
         #region [ Dependnecy -> Repositories ]
 
+        [Dependency]
         public IFilmRepository FilmRepository { get; set; }
 
+        [Dependency]
         public IDirectorRepository DirectorRepository { get; set; }
 
+        [Dependency]
         public IRatingTypeRepository RatingTypeRepository { get; set; }
 
+        [Dependency]
         public ICountryRepository CountryRepository { get; set; }
 
         #endregion
 
         #region [ Dependency -> Model Builders ]
 
+        [Dependency]
         public FilmModelBuilder FilmModelBuilder { get; set; }
 
         #endregion
 
-        public FilmController(IUserOperation userOperation, IFilmRepository filmRepository, IDirectorRepository directorRepository,
-            IRatingTypeRepository ratingTypeRepository, ICountryRepository countryRepository, FilmModelBuilder filmModelBuilder) : base(userOperation)
+        public FilmController(DependencyFactory dependencyFactory)
         {
-            FilmRepository = filmRepository;
-            DirectorRepository = directorRepository;
-            RatingTypeRepository = ratingTypeRepository;
-            CountryRepository = countryRepository;
-            FilmModelBuilder = filmModelBuilder;
+            dependencyFactory.ResolveDependency(this);
         }
 
         [Authorize]
@@ -61,11 +61,25 @@ namespace movies.Controllers
         [HttpGet]
         public PaginationResponseModel<FilmModel> Get([FromQuery] FilmGetModel model)
         {
-            var films = FilmRepository.Collection(model.PageSize, model.PageNumber);
+            var films = FilmRepository.Collection(model.PageSize, model.PageNumber, out int totalCount);
 
             return new PaginationResponseModel<FilmModel>
             {
-                TotalCount = FilmRepository.Count(),
+                TotalCount = totalCount,
+                Collection = films.Select(film => FilmModelBuilder.Build(film))
+            };
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("Find")]
+        public PaginationResponseModel<FilmModel> Find([FromQuery] UserFilmFindModel model)
+        {
+            var films = FilmRepository.Collection(model.Text, model.PageSize, model.PageNumber, out var totalCount);
+
+            return new PaginationResponseModel<FilmModel>
+            {
+                TotalCount = totalCount,
                 Collection = films.Select(film => FilmModelBuilder.Build(film))
             };
         }

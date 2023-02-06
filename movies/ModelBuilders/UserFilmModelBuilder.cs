@@ -1,15 +1,17 @@
-﻿using movies.Interfaces.Entities;
+﻿using movies.Attributes;
+using movies.Interfaces.Entities;
 using movies.Models.UserFilm;
 
 namespace movies.ModelBuilders
 {
     public class UserFilmModelBuilder
     {
+        [Dependency]
         public FilmModelBuilder FilmModelBuilder { get; set; }
 
-        public UserFilmModelBuilder(FilmModelBuilder filmModelBuilder) 
+        public UserFilmModelBuilder(DependencyFactory dependencyFactory) 
         {
-            FilmModelBuilder = filmModelBuilder;
+            dependencyFactory.ResolveDependency(this);
         }
 
         public UserFilmModel Build(IUserFilm userFilm)

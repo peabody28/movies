@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using movies.Interfaces.Operations;
+using movies.Attributes;
 using movies.Interfaces.Repositories;
 using movies.Models.Section;
 
@@ -8,11 +8,12 @@ namespace movies.Controllers
 {
     public class SectionController : BaseController
     {
+        [Dependency]
         public ISectionRepository SectionRepository { get; set; }
 
-        public SectionController(IUserOperation userOperation, ISectionRepository sectionRepository) : base(userOperation)
+        public SectionController(DependencyFactory dependencyFactory)
         {
-            SectionRepository = sectionRepository;
+            dependencyFactory.ResolveDependency(this);
         }
 
         [Authorize]
