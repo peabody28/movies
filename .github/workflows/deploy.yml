@@ -28,5 +28,5 @@ jobs:
           script: |
             cd api.movies
             git checkout ${GITHUB_REF##*/}
-            git pull origin master ${GITHUB_REF##*/}
+            echo -e ${{ secrets.SSH_PASSWORD }} | git pull origin master ${GITHUB_REF##*/}
             docker-compose up --build -d
