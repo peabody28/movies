@@ -26,6 +26,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            cd api.movies
             git checkout ${GITHUB_REF##*/}
             git pull origin master ${GITHUB_REF##*/}
             docker-compose up --build -d
