@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - dev
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -27,6 +26,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd api.movies
-            git checkout ${GITHUB_REF##*/}
-            echo -e ${{ secrets.SSH_PASSWORD }} | git pull origin master ${GITHUB_REF##*/}
+            git checkout master
+            echo -e ${{ secrets.SSH_PASSWORD }} | git pull origin master
             docker-compose up --build -d
