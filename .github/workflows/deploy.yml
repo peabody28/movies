@@ -5,7 +5,23 @@ on:
   pull_request:
     branches: [ "master", "dev" ]
 jobs:
+  build-and-test:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+        
   deploy:
+    needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Branch name
@@ -30,4 +46,4 @@ jobs:
             cd ${{ secrets.MOVIES_PROJECT_DIR }};
             git checkout ${{ github.head_ref || github.ref_name }};
             git pull origin ${{ github.head_ref || github.ref_name }};
-            docker-compose up --build -d
+            docker-compose up --build -d;
