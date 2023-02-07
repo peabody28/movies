@@ -6,7 +6,9 @@ using movies.Entities;
 using movies.Interfaces.Entities;
 using movies.Interfaces.Operations;
 using movies.Interfaces.Repositories;
+using movies.ModelBuilders;
 using movies.Models.Login;
+using movies.Models.UserFilm;
 using System.Security.Claims;
 
 namespace test.movies.Mocks
@@ -76,6 +78,26 @@ namespace test.movies.Mocks
             return mock.Object;
         }
 
+        private IUserFilmRepository UserFilmRepositoryMock()
+        {
+            var user = new UserEntity() { Id = Guid.NewGuid(), Email = "asd@asd", NickName = "nickname", PasswordHash = "789456123" };
+            var mock = new Mock<IUserFilmRepository>();
+            int count = 0;
+            mock.Setup(m => m.Collection(It.IsAny<IUser>(), It.IsAny<int>(), It.IsAny<int>(), out count, It.IsAny<ISection>(), It.IsAny<bool>())).Returns(new List<IUserFilm>());
+
+            return mock.Object;
+        }
+
+        private UserFilmModelBuilder UserFilmModelBuilderMock()
+        {
+            return new UserFilmModelBuilder(this);
+        }
+        
+        private FilmModelBuilder FilmModelBuilderMock()
+        {
+            return new FilmModelBuilder(this);
+        }
+
         public dynamic GetMock(Type instance)
         {
             if (instance.Equals(typeof(IUserOperation))) return UserOperationMock();
@@ -83,7 +105,11 @@ namespace test.movies.Mocks
             else if (instance.Equals(typeof(IAuthorizationOperation))) return AuthorizationOperationMock();
             else if (instance.Equals(typeof(ISectionRepository))) return SectionRepositoryMock();
             else if (instance.Equals(typeof(IUserRepository)))return UserRepositoryMock();
-            
+            else if (instance.Equals(typeof(IUserFilmRepository))) return UserFilmRepositoryMock();
+            else if (instance.Equals(typeof(UserFilmModelBuilder))) return UserFilmModelBuilderMock();
+            else if (instance.Equals(typeof(FilmModelBuilder))) return FilmModelBuilderMock();
+
+
             return null!;
         }
     }
