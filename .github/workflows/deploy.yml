@@ -7,9 +7,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ssh-key:  ${{ secrets.SSH_PASSWORD }}
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -26,7 +23,7 @@ jobs:
           user: ${{secrets.SSH_USER}}
           private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
-            cd api.movie;
+            cd api.movies;
             git checkout master;
             git pull origin master;
             docker-compose up --build -d
