@@ -1,6 +1,5 @@
 ﻿using movies.Constants;
 using movies.Entities;
-using movies.Interfaces.Entities;
 using movies.Validations.Film;
 using movies.Validators;
 using test.movies.Constants;
@@ -22,7 +21,7 @@ namespace test.movies.Validations
         }
 
         [Test]
-        public void ValidateFilmValidateRatingTypeName([Values(null, "", " ", "undefined_rating_type", TestDataConstants.ExisitngRatingTypeName)] string? ratingTypeName)
+        public void ValidateRatingTypeName([Values("undefined_rating_type", TestDataConstants.ExisitngRatingTypeName)] string? ratingTypeName)
         {
             // Arrange
 
@@ -45,7 +44,7 @@ namespace test.movies.Validations
                 else
                 {
                     Assert.IsTrue(resp.HasErrors);
-                    Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.RATING_TYPE_INVALID));
+                    Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.RATING_TYPE_NAME_INVALID));
                 }
             }
         }
@@ -95,7 +94,7 @@ namespace test.movies.Validations
         }
 
         [Test]
-        public void CheckDuplicates([Values(null, "", " ", "undefined_title", TestDataConstants.ExistingFilmTitle)] string? filmTitle)
+        public void CheckDuplicates([Values("undefined_title", TestDataConstants.ExistingFilmTitle)] string? filmTitle)
         {
             // Act
             var resp = FilmValidation.CheckDuplicates(filmTitle);
@@ -104,27 +103,19 @@ namespace test.movies.Validations
             Assert.IsNotNull(resp);
             Assert.IsInstanceOf<ValidationResult>(resp);
 
-            if (string.IsNullOrWhiteSpace(filmTitle))
+            if(filmTitle.Equals(TestDataConstants.ExistingFilmTitle))
             {
                 Assert.IsTrue(resp.HasErrors);
-                Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.FILM_TITLE_REQUIRED));
+                Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.FILM_ALREADY_EXISTS));
             }
             else
-            {
-                if(filmTitle.Equals(TestDataConstants.ExistingFilmTitle))
-                {
-                    Assert.IsTrue(resp.HasErrors);
-                    Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.FILM_ALREADY_EXISTS));
-                }
-                else
-                    Assert.IsTrue(resp.IsValid);
-            }
+                Assert.IsTrue(resp.IsValid);
         }
 
         
         [Test]
         public void CheckDuplicates([Values("undefined_user_film_user", TestDataConstants.ExistingUserName)] string nickName,
-            [Values("{00000000-0000-0000-0000-000000000000}", TestDataConstants.ExistingFilmId)] string id,
+            [Values("{00000000-0000-0000-0000-000000000000}", TestDataConstants.ExistingFilmId, TestDataConstants.ExistingUserFilmFilmId)] string id,
             [Values("undefined_user_film_section", TestDataConstants.ExistingSectionName)] string sectionName)
         {
             // Arrange

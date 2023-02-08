@@ -39,7 +39,11 @@ namespace test.movies.Mocks
 
         private IFilm ExistingFilmStub = new FilmEntity { Id = Guid.Parse(TestDataConstants.ExistingFilmId), Title = TestDataConstants.ExistingFilmTitle };
 
+        private IFilm ExistingUserFilmFilmStub = new FilmEntity { Id = Guid.Parse(TestDataConstants.ExistingUserFilmFilmId), Title = TestDataConstants.ExistingUserFilmFilmTitle };
+
         private ISection ExistingSectionStub = new SectionEntity { Id = Guid.Parse(TestDataConstants.ExistingSectionId), Name = TestDataConstants.ExistingSectionName };
+
+        private ISection ExistingUserFilmSectionStub = new SectionEntity { Id = Guid.Parse(TestDataConstants.ExistingUserFilmSectionId), Name = TestDataConstants.ExistingUserFilmSectionName };
         
         public IUserFilm ExistingUserFilmStub
         { 
@@ -49,8 +53,8 @@ namespace test.movies.Mocks
                 { 
                     Id = Guid.Parse(TestDataConstants.ExistingUserFilmId),
                     User = ExistingUserStub,
-                    Film = ExistingFilmStub,
-                    Section = ExistingSectionStub
+                    Film = ExistingUserFilmFilmStub,
+                    Section = ExistingUserFilmSectionStub
                 }; 
             } 
         }
@@ -87,6 +91,7 @@ namespace test.movies.Mocks
             sectionRepositoryMock.Setup(a => a.Collection()).Returns(new List<ISection> { ExistingSectionStub } );
             sectionRepositoryMock.Setup(m => m.Object(It.IsAny<string>())).Returns((ISection)null);
             sectionRepositoryMock.Setup(m => m.Object(ExistingSectionStub.Name)).Returns(ExistingSectionStub);
+            sectionRepositoryMock.Setup(m => m.Object(ExistingUserFilmSectionStub.Name)).Returns(ExistingUserFilmSectionStub);
 
             return sectionRepositoryMock.Object;
         }
@@ -106,8 +111,11 @@ namespace test.movies.Mocks
             var filmRepositoryMock = new Mock<IFilmRepository>();
             filmRepositoryMock.Setup(a => a.Object(It.IsAny<Guid>())).Returns((IFilm?)null);
             filmRepositoryMock.Setup(a => a.Object(ExistingFilmStub.Id)).Returns(ExistingFilmStub);
+            filmRepositoryMock.Setup(a => a.Object(ExistingUserFilmFilmStub.Id)).Returns(ExistingUserFilmFilmStub);
+
             filmRepositoryMock.Setup(a => a.Object(It.IsAny<string>())).Returns((IFilm?)null);
             filmRepositoryMock.Setup(a => a.Object(ExistingFilmStub.Title)).Returns(ExistingFilmStub);
+            filmRepositoryMock.Setup(a => a.Object(ExistingUserFilmFilmStub.Title)).Returns(ExistingUserFilmFilmStub);
 
             return filmRepositoryMock.Object;
         }
@@ -128,10 +136,14 @@ namespace test.movies.Mocks
             var mock = new Mock<IUserFilmRepository>();
             int count = 0;
             mock.Setup(m => m.Collection(It.IsAny<IUser>(), It.IsAny<int>(), It.IsAny<int>(), out count, It.IsAny<ISection>(), It.IsAny<bool>())).Returns(new List<IUserFilm>());
+
             mock.Setup(a => a.Object(It.IsAny<Guid>(), It.IsAny<bool>())).Returns((IUserFilm?)null);
             mock.Setup(a => a.Object(ExistingUserFilmStub.Id, It.IsAny<bool>())).Returns(ExistingUserFilmStub);
+
             mock.Setup(a => a.Object(It.IsAny<IUser>(), It.IsAny<IFilm>(), It.IsAny<ISection>(), It.IsAny<bool>())).Returns((IUserFilm?)null);
             mock.Setup(a => a.Object(ExistingUserFilmStub.User, ExistingUserFilmStub.Film, ExistingUserFilmStub.Section, It.IsAny<bool>())).Returns(ExistingUserFilmStub);
+            mock.Setup(a => a.Object(It.IsAny<IUser>(), ExistingFilmStub, It.IsAny<ISection>(), It.IsAny<bool>())).Returns((IUserFilm)null);
+            mock.Setup(a => a.Object(It.IsAny<IUser>(), ExistingFilmStub, ExistingSectionStub, It.IsAny<bool>())).Returns((IUserFilm)null);
 
             return mock.Object;
         }

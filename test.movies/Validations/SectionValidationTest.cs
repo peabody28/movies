@@ -15,14 +15,14 @@ namespace test.movies.Validations
         }
 
         [Test]
-        public void Validate([Values(null, "", " ", "undefined_section_name", TestDataConstants.ExistingSectionName)] string? sectionName)
+        public void ValidateName([Values(null, "", " ", "undefined_section_name", TestDataConstants.ExistingSectionName)] string? sectionName)
         {
             // Arrange
             DependencyFactoryMock dfm = new DependencyFactoryMock();
             var sectionValidation = new SectionValidation(dfm);
 
             // Act
-            var resp = sectionValidation.Validate(sectionName);
+            var resp = sectionValidation.ValidateName(sectionName);
 
             // Assert
             Assert.IsNotNull(resp);
@@ -37,7 +37,7 @@ namespace test.movies.Validations
                 else
                 {
                     Assert.IsTrue(resp.HasErrors);
-                    Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.SECTION_INVALID));
+                    Assert.IsTrue(resp.Errors.Select(item => item.Code).Contains(ValidationApiErrorConstants.SECTION_NAME_INVALID));
                 }
             }
         }

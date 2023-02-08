@@ -12,8 +12,8 @@ namespace movies.Validators.UserFilm
         {
             RuleFor(model => model)
                 .Custom((model, context) => context.AddFailures(nameof(model.FilmId), filmValidation.ValidateFilmId(model.FilmId)))
-                .Custom((model, context) => context.AddFailures(nameof(model.SectionName), sectionValidation.Validate(model.SectionName)))
-                .Custom((model, context) => context.AddFailures(string.Empty, filmValidation.CheckDuplicates(userOperation.CurrentUser!, model.FilmId, model.SectionName)));
+                .Custom((model, context) => context.AddFailures(nameof(model.SectionName), sectionValidation.ValidateName(model.SectionName)))
+                .Custom((model, context) => context.AddFailures(nameof(model.FilmId), filmValidation.CheckDuplicates(userOperation.CurrentUser!, model.FilmId, model.SectionName)));
         }
     }
 }

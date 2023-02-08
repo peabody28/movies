@@ -36,7 +36,7 @@ namespace movies.Validations.Film
 
             var ratingType = RatingTypeRepository.Object(name);
             if (ratingType == null)
-                return new ValidationResult(ValidationApiErrorConstants.RATING_TYPE_INVALID, "Cannot find a rating type by specified name");
+                return new ValidationResult(ValidationApiErrorConstants.RATING_TYPE_NAME_INVALID, "Cannot find a rating type by specified name");
             
             return ValidationResult.Empty();
         }
@@ -59,11 +59,16 @@ namespace movies.Validations.Film
             return ValidationResult.Empty();
         }
 
-        public ValidationResult CheckDuplicates(string? filmTitle)
+        public ValidationResult ValidateTitle(string? title)
         {
-            if(string.IsNullOrWhiteSpace(filmTitle))
+            if (string.IsNullOrWhiteSpace(title))
                 return new ValidationResult(ValidationApiErrorConstants.FILM_TITLE_REQUIRED, "Film title is required");
 
+            return ValidationResult.Empty();
+        }
+
+        public ValidationResult CheckDuplicates(string filmTitle)
+        {
             var film = FilmRepository.Object(filmTitle);
             if (film != null)
                 return new ValidationResult(ValidationApiErrorConstants.FILM_ALREADY_EXISTS, "Film is already exists");

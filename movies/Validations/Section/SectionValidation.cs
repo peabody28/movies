@@ -19,14 +19,14 @@ namespace movies.Validations.Section
             dependencyFactory.ResolveDependency(this);
         }
 
-        public ValidationResult Validate(string? name)
+        public ValidationResult ValidateName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return ValidationResult.Empty();
 
             var section = SectionRepository.Object(name);
             if (section == null)
-                return new ValidationResult(ValidationApiErrorConstants.SECTION_INVALID, "Cannot find a section by specified name");
+                return new ValidationResult(ValidationApiErrorConstants.SECTION_NAME_INVALID, "Cannot find a section by specified name");
 
             return ValidationResult.Empty();
         }
