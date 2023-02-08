@@ -2,6 +2,7 @@
 using Moq;
 using movies.Operations;
 using System.Security.Claims;
+using test.movies.Constants;
 using test.movies.Mocks;
 
 namespace test.movies.Operations
@@ -26,7 +27,7 @@ namespace test.movies.Operations
         }
 
         [Test]
-        public void Object([Values(null, "Test")] string nickname)
+        public void CurrentUserObject([Values(null, TestDataConstants.ExistingUserName)] string nickname)
         {
             // Arrange
             DependencyFactoryMock dfm = new DependencyFactoryMock();

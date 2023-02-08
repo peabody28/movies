@@ -1,4 +1,5 @@
 ﻿using movies.Attributes;
+using movies.Constants;
 using movies.Interfaces.Repositories;
 using movies.Validators;
 
@@ -25,7 +26,7 @@ namespace movies.Validations.Section
 
             var section = SectionRepository.Object(name);
             if (section == null)
-                return new ValidationResult("SECTION_INVALID", "Cannot find a section by specified name");
+                return new ValidationResult(ValidationApiErrorConstants.SECTION_INVALID, "Cannot find a section by specified name");
 
             return ValidationResult.Empty();
         }
