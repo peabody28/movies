@@ -20,7 +20,6 @@ namespace movies.Controllers
         [HttpGet]
         public IEnumerable<SectionModel> Get()
         {
-            return null;
             var collection = SectionRepository.Collection();
 
             return collection.Select(item => new SectionModel
