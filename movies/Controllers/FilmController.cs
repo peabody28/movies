@@ -61,7 +61,6 @@ namespace movies.Controllers
         [HttpGet]
         public PaginationResponseModel<FilmModel> Get([FromQuery] FilmGetModel model)
         {
-            return null;
             var films = FilmRepository.Collection(model.PageSize, model.PageNumber, out int totalCount);
 
             return new PaginationResponseModel<FilmModel>
