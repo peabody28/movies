@@ -1,9 +1,6 @@
-﻿using movies.Controllers;
-using movies.Interfaces.Entities;
-using movies.Models.Login;
+﻿using movies.Helpers;
 using movies.Operations;
-using NUnit.Framework;
-using System.Security.Claims;
+using test.movies.Constants;
 using test.movies.Mocks;
 
 namespace test.movies.Operations
@@ -17,24 +14,26 @@ namespace test.movies.Operations
         }
 
         [Test]
-        public void Object([Values(null,  "Test")] string nickname)
+        public void Object([Values(null, TestDataConstants.ExistingUserName)] string nickname,
+            [Values(null, TestDataConstants.ExistingUserPassword)] string password)
         {
             // Arrange
             DependencyFactoryMock dfm = new DependencyFactoryMock();
             var identityOperation = new IdentityOperation(dfm);
+            var passwordHash = MD5Helper.Hash(password);
 
             // Act
-            var resp = identityOperation.Object(nickname, "some_password");
+            var resp = identityOperation.Object(nickname, password);
 
             // Assert
-            if(string.IsNullOrWhiteSpace(nickname))
-                Assert.IsNull(resp);
-            else
+            if (nickname != null && passwordHash != null && nickname.Equals(dfm.ExistingUserStub.NickName) && passwordHash.Equals(dfm.ExistingUserStub.PasswordHash))
             {
                 Assert.IsNotNull(resp);
                 Assert.That(resp.Claims, Is.Not.Empty);
                 Assert.That(resp.Name, Is.Not.Null);
             }
+            else
+                Assert.IsNull(resp);
         }
     }
 }

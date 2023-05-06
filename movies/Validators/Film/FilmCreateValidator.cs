@@ -9,7 +9,8 @@ namespace movies.Validators.Film
         public FilmCreateValidator(FilmValidation filmValidation) 
         {
             RuleFor(model => model)
-                .Custom((model, context) => context.AddFailures(nameof(model.Title), filmValidation.CheckDuplicates(model.Title)))
+                .Custom((model, context) => context.AddFailures(nameof(model.Title), filmValidation.ValidateTitle(model.Title)))
+                .Custom((model, context) => context.AddFailures(nameof(model.Title), filmValidation.CheckDuplicates(model.Title!)))
                 .Custom((model, context) => context.AddFailures(nameof(model.RatingTypeName), filmValidation.ValidateRatingTypeName(model.RatingTypeName)));
         }
     }
